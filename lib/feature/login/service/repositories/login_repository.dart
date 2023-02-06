@@ -28,8 +28,7 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<ApiResponse> login(String email, String password) async {
     if (await networkInfo.isConnected) {
       try {
-        final String? token = await dBProvider.getToken();
-        final data = await apiProvider.login(email, password, token);
+        final data = await apiProvider.login(email, password);
         dBProvider.storeUser(data, email, password);
         return ApiResponse.success(data);
       } on Exception catch (e) {
