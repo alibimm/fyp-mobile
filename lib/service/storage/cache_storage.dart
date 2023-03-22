@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fyp_mobile/constants/constants.dart';
 import 'package:get_storage/get_storage.dart';
@@ -40,7 +42,7 @@ class CacheStorageImpl implements CacheStorage {
         throw e;
       });
     } on Exception catch (e) {
-      print("Hive cache storage cache exception: $e");
+      log("Hive cache storage cache exception: $e");
       rethrow;
     }
   }
@@ -51,7 +53,7 @@ class CacheStorageImpl implements CacheStorage {
       final Box currentBox = await _openHiveBox(box);
       return await currentBox.get(key, defaultValue: null);
     } on Exception catch (e) {
-      print("Hive cache storage read exception: $e");
+      log("Hive cache storage read exception: $e");
       rethrow;
     }
   }
@@ -64,7 +66,7 @@ class CacheStorageImpl implements CacheStorage {
         throw e;
       });
     } on Exception catch (e) {
-      print("Hive cache storage remove exception: $e");
+      log("Hive cache storage remove exception: $e");
       rethrow;
     }
   }
@@ -72,18 +74,17 @@ class CacheStorageImpl implements CacheStorage {
   @override
   Future clearCache({bool withDigitalTickets = false}) async {
     try {
-      /// clear all boxes except DigitalTicketBox
       for (final boxName in hiveBoxes) {
         await hive.deleteBoxFromDisk(boxName.toString()).catchError((e) {
           throw e;
         });
-        print("Hive box: $boxName removed from disk");
+        log("Hive box: $boxName removed from disk");
       }
 
       /// clear images from cache
       await DefaultCacheManager().emptyCache();
     } on Exception catch (e) {
-      print("Hive cache storage clear exception: $e");
+      log("Hive cache storage clear exception: $e");
       rethrow;
     }
   }
@@ -96,13 +97,13 @@ class CacheStorageImpl implements CacheStorage {
   Future<Box> _openHiveBox(String box) async {
     if (hive.isBoxOpen(box)) {
       return hive.box(box);
-    } else {
-      final currentBox = await hive.openBox(box).catchError((e, s) {
-        hive.deleteBoxFromDisk(box);
-        print(
-            "Hive cache storage open box crushed and this box is deleted: $e");
-      });
-      return currentBox;
     }
+    final currentBox = await hive.openBox(box).catchError((e, s) {
+      hive.deleteBoxFromDisk(box);
+      log("Hive cache storage open box crushed and this box is deleted: $e");
+      if (!hive.isBoxOpen(defaultBox)) hive.openBox(defaultBox);
+      return hive.box(defaultBox);
+    });
+    return currentBox;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:injectable/injectable.dart';
@@ -19,14 +21,8 @@ class SecureStorageImpl implements SecureStorage {
   SecureStorageImpl._({required this.storage, required this.getStorage});
 
   @factoryMethod
-  static Future<SecureStorage> init(
-      FlutterSecureStorage storage, GetStorage getStorage) async {
-    final instance =
-        SecureStorageImpl._(storage: storage, getStorage: getStorage);
-    if (getStorage.read('firstRunSecure') ?? true) {
-      await storage.deleteAll();
-      getStorage.write('firstRunSecure', false);
-    }
+  static Future<SecureStorage> init(FlutterSecureStorage storage, GetStorage getStorage) async {
+    final instance = SecureStorageImpl._(storage: storage, getStorage: getStorage);
     return instance;
   }
 
@@ -35,7 +31,7 @@ class SecureStorageImpl implements SecureStorage {
     try {
       return await storage.read(key: key);
     } on Exception catch (e) {
-      print("Secure storage read exception: $e");
+      log("Secure storage read exception: $e");
     }
     return null;
   }
@@ -44,9 +40,9 @@ class SecureStorageImpl implements SecureStorage {
   Future putData(String key, String? value) async {
     try {
       await storage.write(key: key, value: value!);
-      print("Secure storage key: $key has been updated");
+      log("Secure storage key: $key has been updated");
     } on Exception catch (e) {
-      print("Secure storage write key exception: $e");
+      log("Secure storage write key exception: $e");
     }
   }
 
@@ -54,9 +50,9 @@ class SecureStorageImpl implements SecureStorage {
   Future removeData(String key) async {
     try {
       await storage.delete(key: key);
-      print("Secure storage key: $key has been removed");
+      log("Secure storage key: $key has been removed");
     } on Exception catch (e) {
-      print("Secure storage delete key exception: $e");
+      log("Secure storage delete key exception: $e");
     }
   }
 
@@ -64,9 +60,9 @@ class SecureStorageImpl implements SecureStorage {
   Future removeAllData() async {
     try {
       await storage.deleteAll();
-      print("Secure storage has been cleared");
+      log("Secure storage has been cleared");
     } on Exception catch (e) {
-      print("Secure storage delete all exception: $e");
+      log("Secure storage delete all exception: $e");
     }
   }
 

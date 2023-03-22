@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fyp_mobile/constants/constants.dart';
 import 'package:fyp_mobile/feature/login/model/main_user.dart';
 import 'package:fyp_mobile/service/storage/secure_storage.dart';
 
@@ -16,23 +17,25 @@ class LoginDBProviderImpl implements LoginDBProvider {
   LoginDBProviderImpl({required this.secureStorage});
 
   @override
-  Future<String?> getToken() async =>
-      await secureStorage.getData('AccessToken');
+  Future<String?> getToken() async => await secureStorage.getData(accessTokenKey);
 
   @override
-  Future<String?> getUser() async => await secureStorage.getData('MainUser');
+  Future<String?> getUser() async => await secureStorage.getData(mainUserKey);
 
   @override
   Future removeUser() async {
-    await secureStorage.removeData('AccessToken');
-    await secureStorage.removeData('MainUser');
+    secureStorage
+      ..removeData(accessTokenKey)
+      ..removeData(mainUserKey)
+      ..removeData(mainUserIdKey);
   }
 
   @override
   Future storeUser(dynamic object, String username, String password) async {
     final MainUser mainUser = object;
     secureStorage
-      ..putData('MainUser', json.encode(mainUser.toJson()))
-      ..putData('AccessToken', mainUser.accessToken);
+      ..putData(mainUserKey, json.encode(mainUser.toJson()))
+      ..putData(mainUserIdKey, mainUser.user?.userId)
+      ..putData(accessTokenKey, mainUser.accessToken);
   }
 }

@@ -49,13 +49,11 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   }) {
     return User(
       email: email == const $CopyWithPlaceholder() || email == null
-          // ignore: unnecessary_non_null_assertion
-          ? _value.email!
+          ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String,
       userId: userId == const $CopyWithPlaceholder() || userId == null
-          // ignore: unnecessary_non_null_assertion
-          ? _value.userId!
+          ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
     );

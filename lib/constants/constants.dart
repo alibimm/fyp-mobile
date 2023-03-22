@@ -2,8 +2,16 @@ import 'package:get_it/get_it.dart';
 
 // GetIt
 final GetIt getIt = GetIt.instance;
+
+// Secure Storage
+const String mainUserKey = 'MainUser';
+const String mainUserIdKey = 'MainUserId';
+const String accessTokenKey = 'AccessToken';
 // TODO: add hiveboxes
-final Set<String> hiveBoxes = {};
+// Cache
+const String defaultBox = 'DefaultBox';
+const String transactionsBox = 'TransactionsBox';
+const Set<String> hiveBoxes = {defaultBox, transactionsBox};
 
 // API
 const String baseUrl = "http://localhost:3030";

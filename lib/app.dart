@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_mobile/constants/constants.dart';
 import 'package:fyp_mobile/constants/keys.dart';
-import 'package:fyp_mobile/feature/login/service/bloc/login_bloc.dart';
+import 'package:fyp_mobile/feature/login/service/cubit/login_cubit.dart';
 import 'package:fyp_mobile/feature/login/service/injections/login_repository_di.dart';
 import 'package:fyp_mobile/service/loader_indicator.dart';
 import 'package:fyp_mobile/service/message_dialog.dart';

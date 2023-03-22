@@ -8,8 +8,7 @@ abstract class LoginBloc extends Cubit<MainUser?> {
   LoginBloc(MainUser? state) : super(state);
   Future<bool> login(String email, String password);
   Future logout();
-  Future<String?> getToken();
-  Future getUser();
+  Future initUser();
 }
 
 class LoginBlocImpl extends LoginBloc {
@@ -27,13 +26,13 @@ class LoginBlocImpl extends LoginBloc {
   Future<bool> login(String email, String password) async {
     loaderIndicator.run();
     final data = await repository.login(email, password);
-    if (data?.object != null) {
-      emit(data?.object as MainUser);
+    if (data.object != null) {
+      emit(data.object as MainUser);
     } else {
-      messageDialog.show(message: data?.errorMessage ?? 'Internal Error');
+      messageDialog.show(message: data.errorMessage ?? 'Cannot login');
     }
     loaderIndicator.stop();
-    return data?.object != null;
+    return data.object != null;
   }
 
   @override
@@ -43,10 +42,7 @@ class LoginBlocImpl extends LoginBloc {
   }
 
   @override
-  Future<String?> getToken() async => await repository.getToken();
-
-  @override
-  Future getUser() async {
+  Future initUser() async {
     final data = await repository.getUser();
     if (data.object != null) {
       emit(data.object as MainUser);

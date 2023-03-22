@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fyp_mobile/feature/login/service/cubit/login_cubit.dart';
 
 class LifecycleWatcher extends StatefulWidget {
   final Widget child;
@@ -12,6 +14,7 @@ class _LifecycleWatcherState extends State<LifecycleWatcher> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<LoginBloc>(context).initUser();
   }
 
   @override

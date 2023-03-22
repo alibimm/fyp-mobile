@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -59,7 +60,7 @@ mixin ApiMixin<T> {
     } on SocketException catch (_) {
       throw Exception('Network Connection Exception');
     } on Exception catch (e) {
-      print(e.toString());
+      log(e.toString());
       rethrow;
     } finally {
       client.close();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_mobile/feature/login/service/bloc/login_bloc.dart';
+import 'package:fyp_mobile/feature/login/service/cubit/login_cubit.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -9,8 +9,7 @@ class LoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
 
   void login(BuildContext context) {
-    BlocProvider.of<LoginBloc>(context)
-        .login(emailController.text, passwordController.text);
+    BlocProvider.of<LoginBloc>(context).login(emailController.text, passwordController.text);
   }
 
   @override
@@ -31,7 +30,9 @@ class LoginPage extends StatelessWidget {
                 decoration: const InputDecoration(hintText: 'Password'),
               ),
               TextButton(
-                  onPressed: () => login(context), child: const Text("Login"))
+                onPressed: () => login(context),
+                child: const Text("Login"),
+              ),
             ],
           ),
         ),

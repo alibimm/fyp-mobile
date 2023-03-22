@@ -1,20 +1,20 @@
 import 'package:equatable/equatable.dart';
 
-class ApiResponse extends Equatable {
+class AppResponse extends Equatable {
   final Object? object;
   final String? errorMessage;
 
-  const ApiResponse({this.object, this.errorMessage});
+  const AppResponse({this.object, this.errorMessage});
 
-  factory ApiResponse.success(Object? object) {
-    return ApiResponse(
+  factory AppResponse.success(Object? object) {
+    return AppResponse(
       object: object,
       errorMessage: null,
     );
   }
 
-  factory ApiResponse.withError(String? error) {
-    return ApiResponse(
+  factory AppResponse.withError(String? error) {
+    return AppResponse(
       object: null,
       errorMessage: error,
     );

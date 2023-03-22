@@ -7,10 +7,9 @@ import '../providers/login_api_provider.dart';
 import '../providers/login_db_provider.dart';
 
 abstract class LoginRepository<T> {
-  Future<T> login(String email, String password);
-  Future<ApiResponse> logout();
-  Future<ApiResponse> getUser();
-  Future<String?> getToken();
+  Future<AppResponse> login(String email, String password);
+  Future<AppResponse> logout();
+  Future<AppResponse> getUser();
 }
 
 class LoginRepositoryImpl implements LoginRepository {
@@ -25,40 +24,37 @@ class LoginRepositoryImpl implements LoginRepository {
   });
 
   @override
-  Future<ApiResponse> login(String email, String password) async {
+  Future<AppResponse> login(String email, String password) async {
     if (await networkInfo.isConnected) {
       try {
         final data = await apiProvider.login(email, password);
         dBProvider.storeUser(data, email, password);
-        return ApiResponse.success(data);
+        return AppResponse.success(data);
       } on Exception catch (e) {
-        return ApiResponse.withError(e.toString());
+        return AppResponse.withError(e.toString());
       }
     } else {
-      return ApiResponse.withError('Network Connection Error');
+      return AppResponse.withError('Network Connection Error');
     }
   }
 
   @override
-  Future<ApiResponse> logout() async {
+  Future<AppResponse> logout() async {
     try {
       await dBProvider.removeUser();
-      return ApiResponse.success(null);
+      return AppResponse.success(null);
     } on Exception catch (e) {
-      return ApiResponse.withError(e.toString());
+      return AppResponse.withError(e.toString());
     }
   }
 
   @override
-  Future<ApiResponse> getUser() async {
+  Future<AppResponse> getUser() async {
     final rawUser = await dBProvider.getUser();
     if (rawUser != null) {
       final mainUser = MainUser.fromJson(json.decode(rawUser!));
-      return ApiResponse.success(mainUser);
+      return AppResponse.success(mainUser);
     }
-    return ApiResponse.withError(null);
+    return AppResponse.withError("User not found");
   }
-
-  @override
-  Future<String?> getToken() async => await dBProvider.getToken();
 }
