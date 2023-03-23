@@ -9,6 +9,7 @@ part 'transaction_state.dart';
 
 abstract class TransactionCubit extends Cubit<TransactionState> {
   TransactionCubit(TransactionState state) : super(state);
+  Future init();
   Future loadTransactions();
 }
 
@@ -24,14 +25,27 @@ class TransactionCubitImpl extends TransactionCubit {
   }) : super(TransactionInitial());
 
   @override
+  Future init() async {
+    loaderIndicator.run();
+    final data = await repository.fetchFromCache();
+    if (data.object != null) {
+      final transactions = data.object as List<Transaction>;
+      emit(TransactionLoaded(transactions: transactions));
+    } else {
+      emit(TransactionInitial());
+    }
+  }
+
+  @override
   Future loadTransactions() async {
     loaderIndicator.run();
-    final data = await repository.fetchData();
+    final data = await repository.fetchFromApi();
     if (data.object != null) {
       final transactions = data.object as List<Transaction>;
       emit(TransactionLoaded(transactions: transactions));
     } else {
       messageDialog.show(message: data.errorMessage ?? 'Cannot load transactions');
+      emit(TransactionError());
     }
     loaderIndicator.stop();
   }

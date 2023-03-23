@@ -4,7 +4,8 @@ import 'package:fyp_mobile/service/models/api_response.dart';
 import 'package:fyp_mobile/service/network_info.dart';
 
 abstract class TransactionRepository<T> {
-  Future<AppResponse> fetchData();
+  Future<AppResponse> fetchFromApi();
+  Future<AppResponse> fetchFromCache();
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
@@ -19,7 +20,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   });
 
   @override
-  Future<AppResponse> fetchData() async {
+  Future<AppResponse> fetchFromApi() async {
     if (await networkInfo.isConnected) {
       try {
         final token = await dBProvider.getToken();
@@ -32,6 +33,16 @@ class TransactionRepositoryImpl implements TransactionRepository {
       }
     } else {
       return AppResponse.withError('Network Connection Error');
+    }
+  }
+  
+  @override
+  Future<AppResponse> fetchFromCache() async {
+    try {
+      final data = await dBProvider.getData();
+      return AppResponse.success(data);
+    } on Exception {
+      return AppResponse.withError('Couldn\'t load from cache');
     }
   }
 }

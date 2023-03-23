@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_mobile/feature/login/model/main_user.dart';
-import 'package:fyp_mobile/feature/login/service/cubit/login_cubit.dart';
 import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,10 +18,6 @@ class _HomePageState extends State<HomePage> {
 
   void loadTransactions() async {
     BlocProvider.of<TransactionCubit>(context).loadTransactions();
-  }
-
-  void logout(BuildContext context) {
-    BlocProvider.of<LoginBloc>(context).logout();
   }
 
   @override
@@ -59,24 +53,12 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   );
+                } else if (state is TransactionError) {
+                  return const Text("error");
                 }
                 return const Text("Initial");
               },
             ),
-            TextButton(
-              onPressed: loadTransactions,
-              child: const Text('Reload'),
-            ),
-            BlocBuilder<LoginBloc, MainUser?>(
-              builder: (context, user) {
-                final email = user!.user?.email ?? 'no user';
-                return Text(email);
-              },
-            ),
-            TextButton(
-              onPressed: () => logout(context),
-              child: const Text('Logout'),
-            )
           ],
         ),
       ),
