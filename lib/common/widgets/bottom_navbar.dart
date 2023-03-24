@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fyp_mobile/common/utils/app_color.dart';
 import 'package:fyp_mobile/service/navigation/base_navigation.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
@@ -15,6 +16,9 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      selectedItemColor: AppColor.darkPrimaryColor,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
       currentIndex: selected,
       onTap: (ind) {
         setState(() {

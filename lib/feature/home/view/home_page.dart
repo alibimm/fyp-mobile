@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fyp_mobile/feature/home/view/home_page_view.dart';
+import 'package:fyp_mobile/feature/profile/views/profile_page.dart';
+import 'package:fyp_mobile/feature/stats/views/stats_page.dart';
 import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,42 +26,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BlocBuilder<TransactionCubit, TransactionState?>(
-              builder: (context, state) {
-                if (state is TransactionLoading) {
-                  return const Text('Loading');
-                } else if (state is TransactionLoaded) {
-                  final transactions = state.transactions;
-                  return Expanded(
-                    child: ListView.separated(
-                      itemCount: transactions.length,
-                      itemBuilder: (context, index) {
-                        final t = transactions[index];
-                        return Column(
-                          children: [
-                            Text(t.type.toString()),
-                            Text('${t.baseAccount}${t.destinationAccount != null ? ' -> ${t.destinationAccount}' : ''}'),
-                            Text(t.amount.toString()),
-                          ],
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const Divider();
-                      },
-                    ),
-                  );
-                } else if (state is TransactionError) {
-                  return const Text("error");
-                }
-                return const Text("Initial");
-              },
-            ),
+      body: SafeArea(
+        child: PageView(
+          children: const [
+            HomePageView(),
+            StatisticsPage(),
+            ProfilePage(),
           ],
         ),
       ),

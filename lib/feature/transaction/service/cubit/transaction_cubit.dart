@@ -45,7 +45,6 @@ class TransactionCubitImpl extends TransactionCubit {
       emit(TransactionLoaded(transactions: transactions));
     } else {
       messageDialog.show(message: data.errorMessage ?? 'Cannot load transactions');
-      emit(TransactionError());
     }
     loaderIndicator.stop();
   }

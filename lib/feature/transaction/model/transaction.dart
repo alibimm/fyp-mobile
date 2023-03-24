@@ -20,6 +20,8 @@ class Transaction {
   final String baseAccount;
   @HiveField(7, defaultValue: '')
   final String? destinationAccount;
+  @HiveField(11)
+  final DateTime? date;
 
   const Transaction({
     this.transactionId = '',
@@ -29,6 +31,7 @@ class Transaction {
     this.type = TransactionType.expense,
     this.baseAccount = '',
     this.destinationAccount,
+    this.date,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);

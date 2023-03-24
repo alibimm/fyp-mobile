@@ -47,6 +47,7 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: 'Inter'),
         home: WillPopScope(
           child: Navigator(
             key: Keys.globalNavigationKey,
