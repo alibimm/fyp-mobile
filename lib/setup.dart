@@ -26,6 +26,6 @@ Future setup() async {
 
 void registerAdapters() {
   getIt<HiveInterface>()
-  ..registerAdapter(TransactionAdapter())
-  ..registerAdapter(TransactionTypeAdapter());
+    ..registerAdapter(TransactionAdapter())
+    ..registerAdapter(TransactionTypeAdapter());
 }

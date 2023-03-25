@@ -19,3 +19,6 @@ const String authenticationEndpoint = "$baseUrl/authentication";
 const String usersEndpoint = "$baseUrl/users";
 const String accountEndpoint = "$baseUrl/account";
 const String transactionEndpoint = "$baseUrl/transaction";
+
+// Formatting
+const int doublePresicion = 2;

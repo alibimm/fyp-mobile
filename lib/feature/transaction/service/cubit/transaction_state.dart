@@ -11,6 +11,8 @@ class TransactionInitial extends TransactionState {}
 
 class TransactionLoading extends TransactionState {}
 
+class TransactionError extends TransactionState {}
+
 class TransactionLoaded extends TransactionState {
   final List<Transaction> transactions;
   const TransactionLoaded({this.transactions = const []});

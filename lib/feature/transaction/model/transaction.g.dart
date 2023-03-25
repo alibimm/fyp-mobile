@@ -26,13 +26,14 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
           : fields[5] as TransactionType,
       baseAccount: fields[6] == null ? '' : fields[6] as String,
       destinationAccount: fields[7] == null ? '' : fields[7] as String?,
+      date: fields[11] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Transaction obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(1)
       ..write(obj.transactionId)
       ..writeByte(2)
@@ -46,7 +47,9 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       ..writeByte(6)
       ..write(obj.baseAccount)
       ..writeByte(7)
-      ..write(obj.destinationAccount);
+      ..write(obj.destinationAccount)
+      ..writeByte(11)
+      ..write(obj.date);
   }
 
   @override
@@ -117,6 +120,8 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
           TransactionType.expense,
       baseAccount: json['baseAccount'] as String? ?? '',
       destinationAccount: json['destinationAccount'] as String?,
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
@@ -128,6 +133,7 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'type': _$TransactionTypeEnumMap[instance.type]!,
       'baseAccount': instance.baseAccount,
       'destinationAccount': instance.destinationAccount,
+      'date': instance.date?.toIso8601String(),
     };
 
 const _$TransactionTypeEnumMap = {

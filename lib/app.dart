@@ -8,7 +8,7 @@ import 'package:fyp_mobile/service/loader_indicator.dart';
 import 'package:fyp_mobile/service/message_dialog.dart';
 import 'package:fyp_mobile/service/navigation/base_navigation.dart';
 import 'package:fyp_mobile/service/navigation/navigation.dart';
-import 'package:fyp_mobile/service/navigation/router.dart';
+import 'package:fyp_mobile/service/navigation/global_router.dart';
 import 'package:fyp_mobile/service/network_info.dart';
 import 'package:fyp_mobile/service/storage/cache_storage.dart';
 import 'package:fyp_mobile/service/storage/secure_storage.dart';
@@ -47,11 +47,12 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: 'Inter'),
         home: WillPopScope(
           child: Navigator(
-            key: Keys.customNavigationKey,
-            initialRoute: 'splash',
-            onGenerateRoute: CustomRouter.generateRoute,
+            key: Keys.globalNavigationKey,
+            initialRoute: 'login',
+            onGenerateRoute: GlobalRouter.generateRoute,
           ),
           onWillPop: () async {
             return !BlocProvider.of<BaseNavigation>(context).pop();

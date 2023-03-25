@@ -27,7 +27,9 @@ class TransactionDBProviderImpl implements TransactionDBProvider<List<Transactio
 
   @override
   Future<List<Transaction>> getData() async {
-    return await cacheStorage.fetchData(transactionsBox, transactionsBoxKey);
+    final data = await cacheStorage.fetchData(transactionsBox, transactionsBoxKey);
+    if (data == null) return [];
+    return (data as List).map((e) => e as Transaction).toList();
   }
 
   @override
