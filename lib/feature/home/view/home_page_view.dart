@@ -1,25 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_mobile/common/widgets/bottom_navbar.dart';
-import 'package:fyp_mobile/common/widgets/placeholder_view.dart';
-import 'package:fyp_mobile/feature/home/view/transaction_history.dart';
+import 'package:fyp_mobile/common/utils/app_color.dart';
+import 'package:fyp_mobile/common/utils/extensions.dart';
+import 'package:fyp_mobile/feature/home/widgets/balance_widget.dart';
+import 'package:fyp_mobile/feature/home/widgets/greetings_widget.dart';
+import 'package:fyp_mobile/feature/home/widgets/transaction_history.dart';
+import 'package:fyp_mobile/feature/transaction/model/transaction.dart';
 import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
 
 class HomePageView extends StatelessWidget {
-  const HomePageView({super.key});
+  final List<Transaction> transactions;
+  const HomePageView({super.key, required this.transactions});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: const CustomBottomNavBar(),
-      body: BlocBuilder<TransactionCubit, TransactionState?>(
-        builder: (context, state) {
-          if (state is TransactionLoaded) {
-            final transactions = state.transactions;
-            return TransactionHistory(transactions: transactions);
-          }
-          return const PlaceholderView(title: 'Home page placeholder');
-        },
+    return RefreshIndicator(
+      onRefresh: () => BlocProvider.of<TransactionCubit>(context).loadTransactions(),
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverFillRemaining(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: AppColor.backgroundElementGradient,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      height: context.height * 0.3,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: SafeArea(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            24.0.vSpace,
+                            const GreetingsWidget(),
+                            24.0.vSpace,
+                            const BalanceWidget(),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                24.0.vSpace,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: TransactionHistory(transactions: transactions),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

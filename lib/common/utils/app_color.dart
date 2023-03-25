@@ -11,6 +11,10 @@ class AppColor {
 
   static const primaryColor = Color(0xFF549994);
   static const darkPrimaryColor = Color(0xFF408782);
+  static const primaryItemColor = Color(0xFF2F7E79);
 
   static const primaryGradient = [primaryColor, darkPrimaryColor];
+  static const backgroundElementGradient = [Color(0xFF429690), Color(0xFF2A7C76)];
+
+  static const floatingActionButtonColor = Color(0xFF438883);
 }

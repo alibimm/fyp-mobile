@@ -14,8 +14,6 @@ class NavigationService extends BaseNavigation {
         switch (page) {
           case 'login':
           case 'home':
-          case 'statistics':
-          case 'profile':
             Keys.customNavigationKey.currentState!.pushNamedAndRemoveUntil(page!, (route) => false, arguments: arguments);
             break;
           default:
