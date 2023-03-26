@@ -1,3 +1,4 @@
+import 'package:fyp_mobile/common/utils/app_color.dart';
 import 'package:fyp_mobile/common/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class AnimatedLoader extends StatelessWidget {
       width: context.width,
       child: const LinearProgressIndicator(
         backgroundColor: Colors.transparent,
-        valueColor: AlwaysStoppedAnimation(Colors.green), // TODO: change the color
+        valueColor: AlwaysStoppedAnimation(AppColor.floatingActionButtonColor),
         value: null,
       ),
     );
