@@ -11,6 +11,7 @@ abstract class TransactionCubit extends Cubit<TransactionState> {
   TransactionCubit(TransactionState state) : super(state);
   Future init();
   Future loadTransactions();
+  Future createTransaction(double amount, String category, DateTime date);
 }
 
 class TransactionCubitImpl extends TransactionCubit {
@@ -48,4 +49,17 @@ class TransactionCubitImpl extends TransactionCubit {
     }
     loaderIndicator.stop();
   }
+  
+  @override
+  Future createTransaction(double amount, String category, DateTime date) async {
+    loaderIndicator.run();
+    final data = await repository.createTransaction(amount, category, date);
+    if (data.object != null) {
+      messageDialog.show(message: 'Created a transaction');
+    } else {
+      messageDialog.show(message: data.errorMessage ?? 'Cannot load transactions');
+    }
+    loaderIndicator.stop();
+  }
+
 }

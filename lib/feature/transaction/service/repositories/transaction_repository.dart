@@ -1,11 +1,14 @@
+import 'package:fyp_mobile/feature/transaction/model/transaction.dart';
 import 'package:fyp_mobile/feature/transaction/service/providers/transaction_api_provider.dart';
 import 'package:fyp_mobile/feature/transaction/service/providers/transaction_db_provider.dart';
 import 'package:fyp_mobile/service/models/api_response.dart';
 import 'package:fyp_mobile/service/network_info.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class TransactionRepository<T> {
   Future<AppResponse> fetchFromApi();
   Future<AppResponse> fetchFromCache();
+  Future<AppResponse> createTransaction(double amount, String category, DateTime date);
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
@@ -35,7 +38,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return AppResponse.withError('Network Connection Error');
     }
   }
-  
+
   @override
   Future<AppResponse> fetchFromCache() async {
     try {
@@ -43,6 +46,27 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return AppResponse.success(data);
     } on Exception {
       return AppResponse.withError('Couldn\'t load from cache');
+    }
+  }
+
+  @override
+  Future<AppResponse> createTransaction(double amount, String category, DateTime date) async {
+    try {
+      final token = await dBProvider.getToken();
+      final userId = await dBProvider.getUserId() ?? '';
+      final String id = const Uuid().v4();
+      final Transaction transaction = Transaction(
+        transactionId: id,
+        userId: userId,
+        category: category,
+        amount: amount,
+        date: date,
+        type: TransactionType.expense, // TODO: add different type support
+      );
+      final data = apiProvider.createTransactions(token, transaction);
+      return AppResponse.success(data);
+    } on Exception {
+      return AppResponse.withError('Couldn\'t create a transactions');
     }
   }
 }

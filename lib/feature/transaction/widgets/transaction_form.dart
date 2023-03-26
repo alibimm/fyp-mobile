@@ -1,7 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_mobile/common/utils/app_color.dart';
 import 'package:fyp_mobile/common/utils/extensions.dart';
 import 'package:fyp_mobile/common/utils/style.dart';
+import 'package:fyp_mobile/common/widgets/button.dart';
+import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
 import 'package:fyp_mobile/feature/transaction/widgets/form_field.dart';
 import 'package:intl/intl.dart';
 
@@ -14,8 +19,31 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
   final TextEditingController _dateController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
+  late String _selectedCategory;
+  late DateTime _selectedDate;
+
+  final List<String> categories = [
+    'Entertainment',
+    'Groceries',
+    'Transport',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = categories[0];
+    _selectedDate = DateTime.now();
+  }
+
+  void createOnTapped() {
+    try {
+      final double amount = double.parse(_valueController.text);
+      BlocProvider.of<TransactionCubit>(context).createTransaction(amount, _selectedCategory, _selectedDate);
+    } on Exception catch (e) {
+      log(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +67,21 @@ class _TransactionFormState extends State<TransactionForm> {
         children: [
           TransactionFormField(
             title: 'Category',
-            field: DropdownButton<int>(
-              items: const [DropdownMenuItem(child: Text('Entertainment'))],
-              onChanged: (int? value) {},
+            field: DropdownButton<String>(
+              value: _selectedCategory,
+              items: [
+                for (final category in categories)
+                  DropdownMenuItem(
+                    value: category,
+                    child: Text(category),
+                  ),
+              ],
+              onChanged: (String? value) {
+                if (value == null) return;
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
             ),
           ),
           16.0.vSpace,
@@ -135,7 +175,16 @@ class _TransactionFormState extends State<TransactionForm> {
               },
             ),
           ),
-          30.0.vSpace,
+          20.0.vSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomButton(
+                title: 'Create',
+                onTap: createOnTapped,
+              ),
+            ],
+          )
         ],
       ),
     );
