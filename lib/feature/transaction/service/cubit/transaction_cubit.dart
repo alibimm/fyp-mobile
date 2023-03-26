@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fyp_mobile/feature/transaction/model/transaction.dart';
+import 'package:fyp_mobile/feature/transaction/service/helper/calculations.dart';
 import 'package:fyp_mobile/feature/transaction/service/repositories/transaction_repository.dart';
 import 'package:fyp_mobile/service/loader_indicator.dart';
 import 'package:fyp_mobile/service/message_dialog.dart';
@@ -31,7 +32,9 @@ class TransactionCubitImpl extends TransactionCubit {
     final data = await repository.fetchFromCache();
     if (data.object != null) {
       final transactions = data.object as List<Transaction>;
-      emit(TransactionLoaded(transactions: transactions));
+      final expenses = CalculateTransactions.currentMonthExpenses(transactions);
+      final income = CalculateTransactions.currentMonthIncome(transactions);
+      emit(TransactionLoaded(transactions: transactions, lastMonthExpenses: expenses, lastMonthIncome: income));
     } else {
       emit(TransactionInitial());
     }
@@ -43,13 +46,16 @@ class TransactionCubitImpl extends TransactionCubit {
     final data = await repository.fetchFromApi();
     if (data.object != null) {
       final transactions = data.object as List<Transaction>;
-      emit(TransactionLoaded(transactions: transactions));
+      final expenses = CalculateTransactions.currentMonthExpenses(transactions);
+      final income = CalculateTransactions.currentMonthIncome(transactions);
+
+      emit(TransactionLoaded(transactions: transactions, lastMonthExpenses: expenses, lastMonthIncome: income));
     } else {
       messageDialog.show(message: data.errorMessage ?? 'Cannot load transactions');
     }
     loaderIndicator.stop();
   }
-  
+
   @override
   Future createTransaction(double amount, String category, DateTime date) async {
     loaderIndicator.run();
@@ -61,5 +67,4 @@ class TransactionCubitImpl extends TransactionCubit {
     }
     loaderIndicator.stop();
   }
-
 }

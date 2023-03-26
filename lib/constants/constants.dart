@@ -11,7 +11,8 @@ const String accessTokenKey = 'AccessToken';
 // Cache
 const String defaultBox = 'DefaultBox';
 const String transactionsBox = 'TransactionsBox';
-const Set<String> hiveBoxes = {defaultBox, transactionsBox};
+const String accountsBox = 'AccountsBox';
+const Set<String> hiveBoxes = {defaultBox, transactionsBox, accountsBox};
 
 // API
 const String baseUrl = "http://localhost:3030";

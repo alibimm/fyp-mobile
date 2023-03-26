@@ -1,7 +1,4 @@
 
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:fyp_mobile/constants/constants.dart';
 import 'package:fyp_mobile/feature/transaction/model/transaction.dart';
 import 'package:fyp_mobile/service/mixins/api_mixin.dart';
@@ -27,10 +24,10 @@ class TransactionApiProviderImpl with ApiMixin implements TransactionApiProvider
       "amount": object.amount.toString(),
       "type": "expense",
       "category": object.category,
-      "baseAccount": "6391e362-f752-48bb-a03f-c0783e6f0d34", // TODO: change
+      "baseAccount": "0b2f78f9-a7d6-4a49-9661-1770438c0e4c", // TODO: change
+      "date": object.date.toString(),
     };
-    final response = await fetchData(endPoint: transactionEndpoint, token: token, body: body);
-    log(response);
-    return Transaction.fromJson(jsonDecode(response['data']));
+    await fetchData(endPoint: transactionEndpoint, token: token, body: body);
+    return object;
   }
 }
