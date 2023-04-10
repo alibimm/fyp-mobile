@@ -53,6 +53,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   swapAnimationDuration: const Duration(milliseconds: 150),
                   swapAnimationCurve: Curves.linear,
                   LineChartData(
+                    lineTouchData: LineTouchData(
+                      touchTooltipData: LineTouchTooltipData(
+                        tooltipBgColor: Colors.white,
+                        tooltipBorder: const BorderSide(color: AppColor.primaryColor),
+                      ),
+                    ),
                     gridData: FlGridData(
                       show: false,
                     ),
@@ -69,7 +75,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         // gradient: const LinearGradient(colors: AppColor.primaryGradient),
                         color: AppColor.darkPrimaryColor,
                         barWidth: 2,
-                        spots: partExpenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
+                        spots: expenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
                         dotData: FlDotData(
                           show: false,
                         ),

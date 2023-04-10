@@ -19,34 +19,35 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return LifecycleWatcherProvider(
       child: LifecycleWatcher(
-          child: Scaffold(
-        body: Stack(
-          children: [
-            SizedBox(
-              width: context.width,
-              height: context.height,
-              child: BlocBuilder<LoginBloc, MainUser?>(
-                builder: (context, user) {
-                  if (user == null) return const LoginPage();
-                  return const NavWrapper();
+        child: Scaffold(
+          body: Stack(
+            children: [
+              SizedBox(
+                width: context.width,
+                height: context.height,
+                child: BlocBuilder<LoginBloc, MainUser?>(
+                  builder: (context, user) {
+                    if (user == null) return const LoginPage();
+                    return const NavWrapper();
+                  },
+                ),
+              ),
+              BlocBuilder<LoaderIndicator, bool>(
+                builder: (context, state) {
+                  if (!state) return const SizedBox.shrink();
+                  return const Positioned(top: 0, child: AnimatedLoader());
                 },
               ),
-            ),
-            BlocBuilder<LoaderIndicator, bool>(
-              builder: (context, state) {
-                if (!state) return const SizedBox.shrink();
-                return const Positioned(top: 0, child: AnimatedLoader());
-              },
-            ),
-            BlocBuilder<MessageDialog, Message>(
-              builder: (context, message) {
-                if (message.subtitle == null) return const SizedBox.shrink();
-                return NotificationAnimatedContainer(message: message.subtitle ?? 'Message');
-              },
-            ),
-          ],
+              BlocBuilder<MessageDialog, Message>(
+                builder: (context, message) {
+                  if (message.subtitle == null) return const SizedBox.shrink();
+                  return SafeArea(child: NotificationAnimatedContainer(message: message.subtitle ?? 'Message'));
+                },
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }

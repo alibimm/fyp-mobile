@@ -16,6 +16,7 @@ class LoginPageState extends State<LoginPage> {
   String _email = '';
   String _password = '';
   bool _register = false;
+  bool _passwordObscure = true;
 
   void login(BuildContext context) {
     BlocProvider.of<LoginBloc>(context).login(_email, _password);
@@ -40,7 +41,9 @@ class LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                ),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter your email';
@@ -53,8 +56,21 @@ class LoginPageState extends State<LoginPage> {
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _passwordObscure = !_passwordObscure;
+                      });
+                    },
+                    child: Icon(
+                      _passwordObscure ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
+                      color: AppColor.darkPrimaryColor,
+                    ),
+                  ),
+                ),
+                obscureText: _passwordObscure,
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter your password';

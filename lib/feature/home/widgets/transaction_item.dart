@@ -10,7 +10,7 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = item.category;
+    final title = item.category.isEmpty ? 'Uncategorized' : item.category;
     final date = Tools.formatDate(item.date ?? DateTime.now());
     return SizedBox(
       height: 50,
