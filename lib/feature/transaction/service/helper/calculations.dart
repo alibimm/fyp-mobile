@@ -26,6 +26,7 @@ class CalculateTransactions {
   }
 
   static bool isThisMonth(DateTime? date) {
-    return date?.month == DateTime.now().month;
+    final now = DateTime.now();
+    return date?.year == now.year &&  date?.month == now.month;
   }
 }

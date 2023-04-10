@@ -22,7 +22,7 @@ class TransactionApiProviderImpl with ApiMixin implements TransactionApiProvider
     final body = {
       "userId": object.userId,
       "amount": object.amount.toString(),
-      "type": "expense",
+      "type": object.type == TransactionType.income ? 'income' : 'expense',
       "category": object.category,
       "baseAccount": object.baseAccount,
       "date": object.date.toString(),

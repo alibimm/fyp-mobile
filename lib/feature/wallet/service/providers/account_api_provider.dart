@@ -13,15 +13,17 @@ abstract class AccountApiProvider<T> {
 class AccountApiProviderImpl with ApiMixin implements AccountApiProvider<Account> {
   @override
   Future<List<Account>> fetchAccounts(String? token, String userId) async {
-    final query = {userId: userId};
-    final response = await fetchData(endPoint: accountEndpoint, token: token, query: query);
+    final response = await fetchData(endPoint: '$accountEndpoint?userId=$userId', token: token);
     final accounts = (response['data'] as List).map((e) => Account.fromJson(e)).toList();
     return accounts;
   }
 
   @override
   Future<Account> createAccount(String? token, Account object) async {
-    final body = {};
+    final body = {
+      "accountName": object.accountName,
+      "userId": object.userId,
+    };
     final response = await fetchData(endPoint: accountEndpoint, token: token, body: body);
     log(response);
     return Account.fromJson(jsonDecode(response['data']));

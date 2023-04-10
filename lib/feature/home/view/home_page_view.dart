@@ -23,19 +23,20 @@ class HomePageView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => fetchData(context),
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: AppColor.backgroundElementGradient,
                     ),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
                   ),
                   height: context.height * 0.3,
                 ),
@@ -58,7 +59,7 @@ class HomePageView extends StatelessWidget {
             24.0.vSpace,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: TransactionHistory(transactions: transactions),
+              child: TransactionHistory(transactions: transactions.where((t) => t.type != TransactionType.transfer).toList()),
             ),
           ],
         ),

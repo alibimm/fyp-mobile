@@ -31,11 +31,10 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   return const PlaceholderView(title: 'Stats');
                 }
                 final transactions = state.transactions;
-                print("ALIBI: ${transactions.length}");
                 final expenses = transactions.where((tr) => tr.type == TransactionType.expense).toList();
                 final split = expenses.length * 0.7;
                 final partExpenses = expenses.sublist(split.toInt());
-                final income = transactions.where((tr) => tr.type == TransactionType.income).toList();
+                // final income = transactions.where((tr) => tr.type == TransactionType.income).toList();
                 final prediction = transactions.where((tr) => tr.type == TransactionType.transfer).toList();
 
 

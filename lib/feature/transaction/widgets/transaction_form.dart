@@ -22,6 +22,7 @@ class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _dateController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
   late String _selectedCategory;
+  late String _selectedType;
   late DateTime _selectedDate;
   late String _selectedAccount;
 
@@ -31,10 +32,16 @@ class _TransactionFormState extends State<TransactionForm> {
     'Transport',
   ];
 
+  final List<String> transactionTypes = [
+    'Income',
+    'Expense'
+  ];
+
   @override
   void initState() {
     super.initState();
     _selectedCategory = categories[0];
+    _selectedType = transactionTypes[0];
     _selectedDate = DateTime.now();
     _selectedAccount = '';
     final state = BlocProvider.of<AccountBloc>(context).state;
@@ -46,7 +53,7 @@ class _TransactionFormState extends State<TransactionForm> {
   void createOnTapped() {
     try {
       final double amount = double.parse(_valueController.text);
-      BlocProvider.of<TransactionCubit>(context).createTransaction(amount, _selectedCategory, _selectedAccount, _selectedDate);
+      BlocProvider.of<TransactionCubit>(context).createTransaction(amount, _selectedCategory, _selectedAccount, _selectedDate, _selectedType);
     } on Exception catch (e) {
       log(e.toString());
     }
@@ -118,6 +125,26 @@ class _TransactionFormState extends State<TransactionForm> {
               }
               return const SizedBox.shrink();
             },
+          ),
+          16.0.vSpace,
+          TransactionFormField(
+            title: 'Type',
+            field: DropdownButton<String>(
+              value: _selectedType,
+              items: [
+                for (final type in transactionTypes)
+                  DropdownMenuItem(
+                    value: type,
+                    child: Text(type),
+                  ),
+              ],
+              onChanged: (String? value) {
+                if (value == null) return;
+                setState(() {
+                  _selectedType = value;
+                });
+              },
+            ),
           ),
           16.0.vSpace,
           TransactionFormField(

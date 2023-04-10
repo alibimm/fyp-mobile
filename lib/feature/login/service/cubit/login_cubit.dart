@@ -7,6 +7,7 @@ import '../repositories/login_repository.dart';
 abstract class LoginBloc extends Cubit<MainUser?> {
   LoginBloc(MainUser? state) : super(state);
   Future<bool> login(String email, String password);
+  Future<bool> register(String email, String password);
   Future logout();
   Future initUser();
 }
@@ -30,6 +31,20 @@ class LoginBlocImpl extends LoginBloc {
       emit(data.object as MainUser);
     } else {
       messageDialog.show(message: data.errorMessage ?? 'Cannot login');
+    }
+    loaderIndicator.stop();
+    return data.object != null;
+  }
+
+  @override
+  Future<bool> register(String email, String password) async {
+    loaderIndicator.run();
+    final data = await repository.register(email, password);
+    if (data.object != null) {
+      messageDialog.show(message: 'Registration successful');
+    } else {
+      messageDialog.show(message: data.errorMessage ?? 'Cannot register');
+
     }
     loaderIndicator.stop();
     return data.object != null;

@@ -12,7 +12,7 @@ abstract class AccountBloc extends Cubit<AccountState> {
   AccountBloc(AccountState state) : super(state);
   Future init();
   Future loadAccounts();
-  Future createAccount(double amount, String category, DateTime date);
+  Future createAccount(String accountName);
 }
 
 class AccountBlocImpl extends AccountBloc {
@@ -54,11 +54,12 @@ class AccountBlocImpl extends AccountBloc {
   }
 
   @override
-  Future createAccount(double amount, String category, DateTime date) async {
+  Future createAccount(String accountName) async {
     loaderIndicator.run();
-    final data = await repository.createAccount(amount, category, date);
+    final data = await repository.createAccount(accountName);
     if (data.object != null) {
       messageDialog.show(message: 'Created an account');
+      loadAccounts();
     } else {
       messageDialog.show(message: data.errorMessage ?? 'Cannot load accounts');
     }

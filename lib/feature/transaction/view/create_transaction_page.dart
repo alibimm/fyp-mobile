@@ -25,13 +25,13 @@ class CreateTransactionPage extends StatelessWidget {
         children: [
           Positioned(
             child: Container(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: AppColor.backgroundElementGradient,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
               ),
               height: context.height * 0.3,
             ),

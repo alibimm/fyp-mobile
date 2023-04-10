@@ -12,7 +12,7 @@ abstract class TransactionCubit extends Cubit<TransactionState> {
   TransactionCubit(TransactionState state) : super(state);
   Future init();
   Future loadTransactions();
-  Future createTransaction(double amount, String category, String accountId, DateTime date);
+  Future createTransaction(double amount, String category, String accountId, DateTime date, String type);
 }
 
 class TransactionCubitImpl extends TransactionCubit {
@@ -32,6 +32,11 @@ class TransactionCubitImpl extends TransactionCubit {
     final data = await repository.fetchFromCache();
     if (data.object != null) {
       final transactions = data.object as List<Transaction>;
+      transactions.sort((a, b) {
+        if (a.date == null) return -1;
+        if (b.date == null) return 1;
+        return b.date!.compareTo(a.date!);
+      });
       final expenses = CalculateTransactions.currentMonthExpenses(transactions);
       final income = CalculateTransactions.currentMonthIncome(transactions);
 
@@ -64,6 +69,11 @@ class TransactionCubitImpl extends TransactionCubit {
     final data = await repository.fetchFromApi();
     if (data.object != null) {
       final transactions = data.object as List<Transaction>;
+      transactions.sort((a, b) {
+        if (a.date == null) return -1;
+        if (b.date == null) return 1;
+        return b.date!.compareTo(a.date!);
+      });
       final expenses = CalculateTransactions.currentMonthExpenses(transactions);
       final income = CalculateTransactions.currentMonthIncome(transactions);
       final Map<String, double> expensesMap = {};
@@ -93,9 +103,9 @@ class TransactionCubitImpl extends TransactionCubit {
   }
 
   @override
-  Future createTransaction(double amount, String category, String accountId, DateTime date) async {
+  Future createTransaction(double amount, String category, String accountId, DateTime date, String type) async {
     loaderIndicator.run();
-    final data = await repository.createTransaction(amount, category, accountId, date);
+    final data = await repository.createTransaction(amount, category, accountId, date, type);
     if (data.object != null) {
       messageDialog.show(message: 'Created a transaction');
     } else {

@@ -8,6 +8,7 @@ import '../providers/login_db_provider.dart';
 
 abstract class LoginRepository<T> {
   Future<AppResponse> login(String email, String password);
+  Future<AppResponse> register(String email, String password);
   Future<AppResponse> logout();
   Future<AppResponse> getUser();
 }
@@ -29,6 +30,19 @@ class LoginRepositoryImpl implements LoginRepository {
       try {
         final data = await apiProvider.login(email, password);
         dBProvider.storeUser(data, email, password);
+        return AppResponse.success(data);
+      } on Exception catch (e) {
+        return AppResponse.withError(e.toString());
+      }
+    } else {
+      return AppResponse.withError('Network Connection Error');
+    }
+  }
+  @override
+  Future<AppResponse> register(String email, String password) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final data = await apiProvider.register(email, password);
         return AppResponse.success(data);
       } on Exception catch (e) {
         return AppResponse.withError(e.toString());

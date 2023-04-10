@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 abstract class TransactionRepository<T> {
   Future<AppResponse> fetchFromApi();
   Future<AppResponse> fetchFromCache();
-  Future<AppResponse> createTransaction(double amount, String category, String accountId, DateTime date);
+  Future<AppResponse> createTransaction(double amount, String category, String accountId, DateTime date, String type);
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
@@ -50,7 +50,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<AppResponse> createTransaction(double amount, String category, String accountId, DateTime date) async {
+  Future<AppResponse> createTransaction(double amount, String category, String accountId, DateTime date, String type) async {
     try {
       final token = await dBProvider.getToken();
       final userId = await dBProvider.getUserId() ?? '';
@@ -62,7 +62,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
         category: category,
         amount: amount,
         date: date,
-        type: TransactionType.expense, // TODO: add different type support
+        type: type == 'Income' ? TransactionType.income : TransactionType.expense,
       );
       final data = apiProvider.createTransactions(token, transaction);
       return AppResponse.success(data);
