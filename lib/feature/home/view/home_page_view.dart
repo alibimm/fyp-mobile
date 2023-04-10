@@ -59,7 +59,10 @@ class HomePageView extends StatelessWidget {
             24.0.vSpace,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: TransactionHistory(transactions: transactions.where((t) => t.type != TransactionType.transfer).toList()),
+              child: TransactionHistory(
+                transactions: transactions.where((t) => t.type != TransactionType.transfer).toList(),
+                // transactions: transactions,
+              ),
             ),
           ],
         ),

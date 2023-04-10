@@ -21,50 +21,82 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text('Statistics', style: TextStyle(color: AppColor.mainTextColor)),
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               height: context.height * 0.5,
               child: BlocBuilder<TransactionCubit, TransactionState>(builder: (context, state) {
                 if (state is! TransactionLoaded) {
                   return const PlaceholderView(title: 'Stats');
                 }
                 final transactions = state.transactions;
+                transactions.sort((a, b) {
+                  if (a.date == null) return -1;
+                  if (b.date == null) return 1;
+                  return b.date!.compareTo(a.date!);
+                });
                 final expenses = transactions.where((tr) => tr.type == TransactionType.expense).toList();
-                final split = expenses.length * 0.7;
-                final partExpenses = expenses.sublist(split.toInt());
+                final split = expenses.length * 0.3;
+
+                final partExpenses = expenses.sublist(0, split.toInt());
                 // final income = transactions.where((tr) => tr.type == TransactionType.income).toList();
                 final prediction = transactions.where((tr) => tr.type == TransactionType.transfer).toList();
-
 
                 return LineChart(
                   swapAnimationDuration: const Duration(milliseconds: 150),
                   swapAnimationCurve: Curves.linear,
                   LineChartData(
+                    gridData: FlGridData(
+                      show: false,
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                      border: Border.all(
+                        color: const Color(0xff37434d),
+                        width: 1,
+                      ),
+                    ),
                     // minY: 0.0,
                     lineBarsData: [
                       LineChartBarData(
                         // gradient: const LinearGradient(colors: AppColor.primaryGradient),
-                        color: AppColor.expenseColor,
+                        color: AppColor.darkPrimaryColor,
                         barWidth: 2,
                         spots: partExpenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
                         dotData: FlDotData(
                           show: false,
                         ),
+                        isCurved: true,
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [AppColor.primaryColor, Colors.transparent],
+                          ),
+                        ),
                       ),
                       if (_visible)
                         LineChartBarData(
-                          color: AppColor.transferColor,
-                          // gradient: const LinearGradient(colors: AppColor.primaryGradient),
-                          barWidth: 2,
-                          spots: prediction.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
-                          dotData: FlDotData(
-                            show: false,
-                          ),
-                        ),
+                            color: AppColor.primaryColor,
+                            // gradient: const LinearGradient(colors: AppColor.primaryGradient),
+                            barWidth: 2,
+                            spots: prediction.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
+                            dotData: FlDotData(
+                              show: false,
+                            ),
+                            dashArray: [5, 5]),
                     ],
                     titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           getTitlesWidget: (value, meta) {
