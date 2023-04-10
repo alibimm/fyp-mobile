@@ -1,22 +1,22 @@
 import 'package:fyp_mobile/feature/transaction/model/transaction.dart';
-import 'package:fyp_mobile/feature/transaction/service/providers/transaction_api_provider.dart';
-import 'package:fyp_mobile/feature/transaction/service/providers/transaction_db_provider.dart';
+import 'package:fyp_mobile/feature/wallet/service/providers/account_api_provider.dart';
+import 'package:fyp_mobile/feature/wallet/service/providers/account_db_provider.dart';
 import 'package:fyp_mobile/service/models/api_response.dart';
 import 'package:fyp_mobile/service/network_info.dart';
 import 'package:uuid/uuid.dart';
 
-abstract class TransactionRepository<T> {
+abstract class AccountRepository<T> {
   Future<AppResponse> fetchFromApi();
   Future<AppResponse> fetchFromCache();
-  Future<AppResponse> createTransaction(double amount, String category, String accountId, DateTime date);
+  Future<AppResponse> createAccount(double amount, String category, DateTime date);
 }
 
-class TransactionRepositoryImpl implements TransactionRepository {
-  final TransactionApiProvider apiProvider;
-  final TransactionDBProvider dBProvider;
+class AccountRepositoryImpl implements AccountRepository {
+  final AccountApiProvider apiProvider;
+  final AccountDBProvider dBProvider;
   final NetworkInfo networkInfo;
 
-  TransactionRepositoryImpl({
+  AccountRepositoryImpl({
     required this.apiProvider,
     required this.dBProvider,
     required this.networkInfo,
@@ -28,7 +28,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
       try {
         final token = await dBProvider.getToken();
         final userId = await dBProvider.getUserId() ?? '';
-        final data = await apiProvider.fetchTransactions(token, userId);
+        final data = await apiProvider.fetchAccounts(token, userId);
         dBProvider.cacheData(data);
         return AppResponse.success(data);
       } on Exception catch (e) {
@@ -50,21 +50,20 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<AppResponse> createTransaction(double amount, String category, String accountId, DateTime date) async {
+  Future<AppResponse> createAccount(double amount, String category, DateTime date) async {
     try {
       final token = await dBProvider.getToken();
       final userId = await dBProvider.getUserId() ?? '';
       final String id = const Uuid().v4();
       final Transaction transaction = Transaction(
         transactionId: id,
-        baseAccount: accountId,
         userId: userId,
         category: category,
         amount: amount,
         date: date,
         type: TransactionType.expense, // TODO: add different type support
       );
-      final data = apiProvider.createTransactions(token, transaction);
+      final data = apiProvider.createAccount(token, transaction);
       return AppResponse.success(data);
     } on Exception {
       return AppResponse.withError('Couldn\'t create a transactions');

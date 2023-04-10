@@ -8,6 +8,7 @@ import 'package:fyp_mobile/common/utils/style.dart';
 import 'package:fyp_mobile/common/widgets/button.dart';
 import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
 import 'package:fyp_mobile/feature/transaction/widgets/form_field.dart';
+import 'package:fyp_mobile/feature/wallet/service/bloc/account_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -22,6 +23,7 @@ class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _dateController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
   late String _selectedCategory;
   late DateTime _selectedDate;
+  late String _selectedAccount;
 
   final List<String> categories = [
     'Entertainment',
@@ -34,12 +36,17 @@ class _TransactionFormState extends State<TransactionForm> {
     super.initState();
     _selectedCategory = categories[0];
     _selectedDate = DateTime.now();
+    _selectedAccount = '';
+    final state = BlocProvider.of<AccountBloc>(context).state;
+    if (state is AccountLoaded && state.accounts.isNotEmpty) {
+      _selectedAccount = state.accounts.first.accountId;
+    }
   }
 
   void createOnTapped() {
     try {
       final double amount = double.parse(_valueController.text);
-      BlocProvider.of<TransactionCubit>(context).createTransaction(amount, _selectedCategory, _selectedDate);
+      BlocProvider.of<TransactionCubit>(context).createTransaction(amount, _selectedCategory, _selectedAccount, _selectedDate);
     } on Exception catch (e) {
       log(e.toString());
     }
@@ -48,7 +55,7 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -83,6 +90,34 @@ class _TransactionFormState extends State<TransactionForm> {
                 });
               },
             ),
+          ),
+          16.0.vSpace,
+          BlocBuilder<AccountBloc, AccountState>(
+            builder: (context, state) {
+              if (state is AccountLoaded) {
+                final accounts = state.accounts;
+                return TransactionFormField(
+                  title: 'Account',
+                  field: DropdownButton<String>(
+                    value: _selectedAccount,
+                    items: [
+                      for (final account in accounts)
+                        DropdownMenuItem(
+                          value: account.accountId,
+                          child: Text(account.accountName),
+                        ),
+                    ],
+                    onChanged: (String? value) {
+                      if (value == null) return;
+                      setState(() {
+                        _selectedAccount = value;
+                      });
+                    },
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
           16.0.vSpace,
           TransactionFormField(
@@ -175,7 +210,7 @@ class _TransactionFormState extends State<TransactionForm> {
               },
             ),
           ),
-          20.0.vSpace,
+          16.0.vSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

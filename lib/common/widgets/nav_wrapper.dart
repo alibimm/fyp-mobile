@@ -4,6 +4,7 @@ import 'package:fyp_mobile/common/utils/extensions.dart';
 import 'package:fyp_mobile/common/widgets/animated_loader.dart';
 import 'package:fyp_mobile/constants/keys.dart';
 import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
+import 'package:fyp_mobile/feature/wallet/service/bloc/account_bloc.dart';
 import 'package:fyp_mobile/service/loader_indicator.dart';
 import 'package:fyp_mobile/service/message_dialog.dart';
 import 'package:fyp_mobile/service/navigation/custom_router.dart';
@@ -20,6 +21,7 @@ class _NavWrapperState extends State<NavWrapper> {
   void initState() {
     super.initState();
     BlocProvider.of<TransactionCubit>(context).init();
+    BlocProvider.of<AccountBloc>(context).init();
   }
 
   @override

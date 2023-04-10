@@ -6,6 +6,7 @@ import 'package:fyp_mobile/feature/home/view/home_page.dart';
 import 'package:fyp_mobile/feature/profile/views/profile_page.dart';
 import 'package:fyp_mobile/feature/stats/views/stats_page.dart';
 import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
+import 'package:fyp_mobile/feature/wallet/service/bloc/account_bloc.dart';
 import 'package:fyp_mobile/feature/wallet/view/wallet_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -22,11 +23,12 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _controller = PageController();
-    loadTransactions();
+    loadData();
   }
 
-  void loadTransactions() async {
+  void loadData() async {
     BlocProvider.of<TransactionCubit>(context).loadTransactions();
+    BlocProvider.of<AccountBloc>(context).loadAccounts();
   }
 
   @override

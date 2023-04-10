@@ -51,6 +51,7 @@ dependencies:
   json_serializable: ^6.6.1
   internet_connection_checker: ^1.0.0+1
   uuid: ^3.0.7
+  fl_chart: ^0.61.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fyp_mobile/constants/constants.dart';
 import 'package:fyp_mobile/feature/transaction/model/transaction.dart';
+import 'package:fyp_mobile/feature/wallet/model/account.dart';
 import 'package:fyp_mobile/service/loader_indicator.dart';
 import 'package:fyp_mobile/service/message_dialog.dart';
 import 'package:fyp_mobile/service/network_info.dart';
@@ -27,5 +28,6 @@ Future setup() async {
 void registerAdapters() {
   getIt<HiveInterface>()
     ..registerAdapter(TransactionAdapter())
-    ..registerAdapter(TransactionTypeAdapter());
+    ..registerAdapter(TransactionTypeAdapter())
+    ..registerAdapter(AccountAdapter());
 }
