@@ -17,7 +17,16 @@ class TransactionLoaded extends TransactionState {
   final List<Transaction> transactions;
   final double lastMonthExpenses;
   final double lastMonthIncome;
-  const TransactionLoaded({this.transactions = const [], this.lastMonthExpenses = 0.0, this.lastMonthIncome = 0.0});
+  final Map<String, double> expensesMap;
+  final Map<String, double> incomeMap;
+
+  const TransactionLoaded({
+    this.transactions = const [],
+    this.lastMonthExpenses = 0.0,
+    this.lastMonthIncome = 0.0,
+    this.expensesMap = const {},
+    this.incomeMap = const {},
+  });
 
   @override
   List<Object> get props => [transactions, lastMonthExpenses, lastMonthIncome];

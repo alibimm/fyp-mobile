@@ -11,7 +11,7 @@ abstract class TransactionApiProvider<T> {
 class TransactionApiProviderImpl with ApiMixin implements TransactionApiProvider<Transaction> {
   @override
   Future<List<Transaction>> fetchTransactions(String? token, String userId) async {
-    final query = {userId: userId};
+    final query = {'userId': userId, '\$limit': 200};
     final response = await fetchData(endPoint: transactionEndpoint, token: token, query: query);
     final transactions = (response['data'] as List).map((e) => Transaction.fromJson(e)).toList();
     return transactions;
@@ -24,7 +24,7 @@ class TransactionApiProviderImpl with ApiMixin implements TransactionApiProvider
       "amount": object.amount.toString(),
       "type": "expense",
       "category": object.category,
-      "baseAccount": "0b2f78f9-a7d6-4a49-9661-1770438c0e4c", // TODO: change
+      "baseAccount": object.baseAccount,
       "date": object.date.toString(),
     };
     await fetchData(endPoint: transactionEndpoint, token: token, body: body);

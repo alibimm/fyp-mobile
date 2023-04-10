@@ -22,51 +22,46 @@ class HomePageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => fetchData(context),
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [
-          SliverFillRemaining(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: AppColor.backgroundElementGradient,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      height: context.height * 0.3,
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: AppColor.backgroundElementGradient,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: SafeArea(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            24.0.vSpace,
-                            const GreetingsWidget(),
-                            24.0.vSpace,
-                            const BalanceWidget(),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  height: context.height * 0.3,
                 ),
-                24.0.vSpace,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: TransactionHistory(transactions: transactions),
-                ),
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        24.0.vSpace,
+                        const GreetingsWidget(),
+                        24.0.vSpace,
+                        const BalanceWidget(),
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
-          )
-        ],
+            24.0.vSpace,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TransactionHistory(transactions: transactions),
+            ),
+          ],
+        ),
       ),
     );
   }

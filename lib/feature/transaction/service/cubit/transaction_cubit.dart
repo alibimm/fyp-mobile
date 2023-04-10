@@ -12,7 +12,7 @@ abstract class TransactionCubit extends Cubit<TransactionState> {
   TransactionCubit(TransactionState state) : super(state);
   Future init();
   Future loadTransactions();
-  Future createTransaction(double amount, String category, DateTime date);
+  Future createTransaction(double amount, String category, String accountId, DateTime date);
 }
 
 class TransactionCubitImpl extends TransactionCubit {
@@ -34,7 +34,25 @@ class TransactionCubitImpl extends TransactionCubit {
       final transactions = data.object as List<Transaction>;
       final expenses = CalculateTransactions.currentMonthExpenses(transactions);
       final income = CalculateTransactions.currentMonthIncome(transactions);
-      emit(TransactionLoaded(transactions: transactions, lastMonthExpenses: expenses, lastMonthIncome: income));
+
+      final Map<String, double> expensesMap = {};
+      final Map<String, double> incomeMap = {};
+      for (final transaction in transactions) {
+        if (transaction.type == TransactionType.expense) {
+          final account = transaction.baseAccount;
+          expensesMap[account] = (expensesMap[account] ?? 0.0) + transaction.amount;
+        } else if (transaction.type == TransactionType.income) {
+          final account = transaction.baseAccount;
+          incomeMap[account] = (incomeMap[account] ?? 0.0) + transaction.amount;
+        }
+      }
+      emit(TransactionLoaded(
+        transactions: transactions,
+        lastMonthExpenses: expenses,
+        lastMonthIncome: income,
+        expensesMap: expensesMap,
+        incomeMap: incomeMap,
+      ));
     } else {
       emit(TransactionInitial());
     }
@@ -48,8 +66,26 @@ class TransactionCubitImpl extends TransactionCubit {
       final transactions = data.object as List<Transaction>;
       final expenses = CalculateTransactions.currentMonthExpenses(transactions);
       final income = CalculateTransactions.currentMonthIncome(transactions);
+      final Map<String, double> expensesMap = {};
+      final Map<String, double> incomeMap = {};
 
-      emit(TransactionLoaded(transactions: transactions, lastMonthExpenses: expenses, lastMonthIncome: income));
+      for (final transaction in transactions) {
+        if (transaction.type == TransactionType.expense) {
+          final account = transaction.baseAccount;
+          expensesMap[account] = (expensesMap[account] ?? 0.0) + transaction.amount;
+        } else if (transaction.type == TransactionType.income) {
+          final account = transaction.baseAccount;
+          incomeMap[account] = (incomeMap[account] ?? 0.0) + transaction.amount;
+        }
+      }
+
+      emit(TransactionLoaded(
+        transactions: transactions,
+        lastMonthExpenses: expenses,
+        lastMonthIncome: income,
+        expensesMap: expensesMap,
+        incomeMap: incomeMap,
+      ));
     } else {
       messageDialog.show(message: data.errorMessage ?? 'Cannot load transactions');
     }
@@ -57,9 +93,9 @@ class TransactionCubitImpl extends TransactionCubit {
   }
 
   @override
-  Future createTransaction(double amount, String category, DateTime date) async {
+  Future createTransaction(double amount, String category, String accountId, DateTime date) async {
     loaderIndicator.run();
-    final data = await repository.createTransaction(amount, category, date);
+    final data = await repository.createTransaction(amount, category, accountId, date);
     if (data.object != null) {
       messageDialog.show(message: 'Created a transaction');
     } else {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_mobile/common/utils/app_color.dart';
 import 'package:fyp_mobile/common/utils/extensions.dart';
 import 'package:fyp_mobile/common/utils/style.dart';
+import 'package:fyp_mobile/feature/transaction/service/cubit/transaction_cubit.dart';
 import 'package:fyp_mobile/feature/wallet/model/account.dart';
 
 class AccountCard extends StatelessWidget {
@@ -76,7 +78,13 @@ class AccountCard extends StatelessWidget {
                     ],
                   ),
                   6.0.vSpace,
-                  Text('\$547', style: AppStyles.backgroundColorTextStyle.copyWith(fontSize: 20)),
+                  BlocBuilder<TransactionCubit, TransactionState>(builder: (context, state) {
+                    if (state is TransactionLoaded) {
+                      final income = state.incomeMap[account.accountId] ?? 0.0;
+                      return Text('\$$income', style: AppStyles.backgroundColorTextStyle.copyWith(fontSize: 20));
+                    }
+                    return Text('\$0.0', style: AppStyles.backgroundColorTextStyle.copyWith(fontSize: 20));
+                  }),
                 ],
               ),
               Column(
@@ -111,7 +119,13 @@ class AccountCard extends StatelessWidget {
                     ],
                   ),
                   6.0.vSpace,
-                  Text('\$236', style: AppStyles.backgroundColorTextStyle.copyWith(fontSize: 20)),
+                  BlocBuilder<TransactionCubit, TransactionState>(builder: (context, state) {
+                    if (state is TransactionLoaded) {
+                      final expenses = state.expensesMap[account.accountId] ?? 0.0;
+                      return Text('\$$expenses', style: AppStyles.backgroundColorTextStyle.copyWith(fontSize: 20));
+                    }
+                    return Text('\$0.0', style: AppStyles.backgroundColorTextStyle.copyWith(fontSize: 20));
+                  }),
                 ],
               ),
             ],
