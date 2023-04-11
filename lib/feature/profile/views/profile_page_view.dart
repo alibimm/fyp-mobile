@@ -10,10 +10,12 @@ class ProfilePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final email = mainUser.user?.email ?? 'no user';
+    final userId = mainUser.user?.userId ?? '-';
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(email),
+        Text('Email: $email'),
+        Text('UserID: $userId'),
         TextButton(
           onPressed: () => BlocProvider.of<LoginBloc>(context).logout(),
           child: const Text('Logout'),
