@@ -75,7 +75,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         // gradient: const LinearGradient(colors: AppColor.primaryGradient),
                         color: AppColor.darkPrimaryColor,
                         barWidth: 2,
-                        spots: expenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
+                        spots: expenses.length < 100
+                            ? expenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList()
+                            : partExpenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
                         dotData: FlDotData(
                           show: false,
                         ),
