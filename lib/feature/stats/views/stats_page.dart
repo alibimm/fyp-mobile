@@ -43,7 +43,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   return b.date!.compareTo(a.date!);
                 });
                 final expenses = transactions.where((tr) => tr.type == TransactionType.expense).toList();
-                final split = expenses.length * 0.3;
+                final split = expenses.length * 0.4;
 
                 final partExpenses = expenses.sublist(0, split.toInt());
                 // final income = transactions.where((tr) => tr.type == TransactionType.income).toList();
@@ -75,7 +75,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         // gradient: const LinearGradient(colors: AppColor.primaryGradient),
                         color: AppColor.darkPrimaryColor,
                         barWidth: 2,
-                        spots: expenses.length < 100
+                        spots: expenses.length < 10
                             ? expenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList()
                             : partExpenses.map((tr) => FlSpot(tr.date?.millisecondsSinceEpoch.toDouble() ?? 0.0, tr.amount)).toList(),
                         dotData: FlDotData(

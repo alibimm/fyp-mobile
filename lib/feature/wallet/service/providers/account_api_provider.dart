@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:fyp_mobile/constants/constants.dart';
 import 'package:fyp_mobile/feature/wallet/model/account.dart';
@@ -25,7 +24,7 @@ class AccountApiProviderImpl with ApiMixin implements AccountApiProvider<Account
       "userId": object.userId,
     };
     final response = await fetchData(endPoint: accountEndpoint, token: token, body: body);
-    log(response);
+    // log(response);
     return Account.fromJson(jsonDecode(response['data']));
   }
 }
